@@ -198,6 +198,8 @@ dependencies {
     } else {
       implementation jscFlavor
     }
+
+    implementation ('com.google.android.gms:play-services-ads:16.+') { force = true; }
 }
 
 // Run this once to be able to run the application with BUCK

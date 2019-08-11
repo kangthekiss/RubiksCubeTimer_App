@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableWithoutFeedback
 } from 'react-native'
+import { AdMobBanner } from 'react-native-admob'
 
 class App extends React.Component {
   constructor(props) {
@@ -114,14 +115,14 @@ class App extends React.Component {
 
     if (minutes > 0) {
       return (
-        <Text style={{ fontWeight: 'bold', fontSize: 50, color: '#FFFFFF' }}>
+        <Text style={styles.time}>
           {minutes}:{seconds}.{centiseconds}
         </Text>
       )
     }
 
     return (
-      <Text style={{ fontWeight: 'bold', fontSize: 50, color: '#FFFFFF' }}>
+      <Text style={styles.time}>
         {seconds}.{centiseconds}
       </Text>
     )
@@ -129,61 +130,84 @@ class App extends React.Component {
 
   _renderScramble = () => {
     return (
-      <Text
-        style={{
-          textAlign: 'center',
-          color: '#FFFFFF',
-          fontWeight: 'bold',
-          fontSize: 20
-        }}
-      >
-        {this.state.scramble.join('   ')}
-      </Text>
+      <Text style={styles.textScramble}>{this.state.scramble.join('   ')}</Text>
     )
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        style={{ flex: 1 }}
-        onPress={this._onPress}
-        onLongPress={this._onLongPress}
-        onPressOut={this._onPressOut}
-        delayLongPress={350}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: this.state.bgColor
-          }}
+      <View style={styles.flex}>
+        <TouchableWithoutFeedback
+          style={styles.flex}
+          onPress={this._onPress}
+          onLongPress={this._onLongPress}
+          onPressOut={this._onPressOut}
+          delayLongPress={350}
         >
-          <StatusBar barStyle="default" backgroundColor="gray" />
+          <View
+            style={[
+              styles.container,
+              styles.flex,
+              { backgroundColor: this.state.bgColor }
+            ]}
+          >
+            <StatusBar barStyle="default" backgroundColor="gray" />
 
-          {!this.state.isStarted && (
-            <View
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: '15%',
-                width: '100%',
-                justifyContent: 'center',
-                padding: 25
-                // borderBottomColor: '#FFFFFF',
-                // borderBottomWidth: 0.5
-              }}
-            >
-              {this._renderScramble()}
-            </View>
-          )}
+            {!this.state.isStarted && (
+              <View style={styles.scramble}>{this._renderScramble()}</View>
+            )}
 
-          {this._renderTimer()}
+            {this._renderTimer()}
+          </View>
+        </TouchableWithoutFeedback>
+
+        <View style={[styles.ad, { backgroundColor: this.state.bgColor }]}>
+          <AdMobBanner
+            adSize="banner"
+            adUnitID="ca-app-pub-5356225657035477/2386800123"
+            testDevices={[AdMobBanner.simulatorId]}
+            onAdFailedToLoad={error => console.error(error)}
+          />
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  scramble: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '15%',
+    width: '100%',
+    justifyContent: 'center',
+    padding: 25,
+    marginTop: 20
+    // borderBottomColor: '#FFFFFF',
+    // borderBottomWidth: 0.5
+  },
+  ad: {
+    alignItems: 'center'
+  },
+  textScramble: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 20
+  },
+  time: {
+    fontWeight: 'bold',
+    fontSize: 50,
+    color: '#FFFFFF'
+  }
+})
 
 export default App
